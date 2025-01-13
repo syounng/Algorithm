@@ -23,33 +23,19 @@ public class Main {
         }
 
         for(int i = 1; i< n; i++){
-            for(int j=0; j<3; j++){
-                findMax(i, j);
-                findMin(i, j);
-            }
+            dpMax[i][0] += Math.max(dpMax[i-1][0], dpMax[i-1][1]);
+            dpMax[i][1] += Math.max(Math.max(dpMax[i-1][0], dpMax[i-1][1]), dpMax[i-1][2]);
+            dpMax[i][2] += Math.max(dpMax[i-1][1], dpMax[i-1][2]);
+
+            dpMin[i][0] += Math.min(dpMin[i-1][0], dpMin[i-1][1]);
+            dpMin[i][1] += Math.min(Math.min(dpMin[i-1][0], dpMin[i-1][1]), dpMin[i-1][2]);
+            dpMin[i][2] += Math.min(dpMin[i-1][1], dpMin[i-1][2]);
         }
         Arrays.sort(dpMax[n-1]);
         Arrays.sort(dpMin[n-1]);
         System.out.println(dpMax[n-1][2] + " " + dpMin[n-1][0]);
 
     }
-    static void findMax(int x, int y){
-        if(y==0){
-            dpMax[x][0] += Math.max(dpMax[x-1][0], dpMax[x-1][1]);
-        }else if(y==1){
-            dpMax[x][1] += Math.max(Math.max(dpMax[x-1][0], dpMax[x-1][1]), dpMax[x-1][2]);
-        }else{
-            dpMax[x][2] += Math.max(dpMax[x-1][1], dpMax[x-1][2]);
-        }
-    }
-    static void findMin(int x, int y){
-        if(y==0){
-            dpMin[x][0] += Math.min(dpMin[x-1][0], dpMin[x-1][1]);
-        }else if(y==1){
-            dpMin[x][1] += Math.min(Math.min(dpMin[x-1][0], dpMin[x-1][1]), dpMin[x-1][2]);
-        }else{
-            dpMin[x][2] += Math.min(dpMin[x-1][1], dpMin[x-1][2]);
-        }
-    }
+
 
 }
