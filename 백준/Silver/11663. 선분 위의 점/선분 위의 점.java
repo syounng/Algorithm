@@ -1,70 +1,71 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    static int[] point;
+    static int N, M;
+    static int[] points;
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st=new StringTokenizer(br.readLine());
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        //입력 받기
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-        int N=Integer.parseInt(st.nextToken());
-        int M=Integer.parseInt(st.nextToken());
+        points = new int[N];
 
-        point=new int[N];
-
-        st=new StringTokenizer(br.readLine());
-        for(int i=0;i<N;i++){
-            point[i]=Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            points[i] = Integer.parseInt(st.nextToken());
         }
 
-        Arrays.sort(point);
+        //점들을 오름차순으로 정렬
+        Arrays.sort(points);
 
-        for(int i=0;i<M;i++){
-            st=new StringTokenizer(br.readLine());
-            int start=Integer.parseInt(st.nextToken());
-            int end=Integer.parseInt(st.nextToken());
+        for(int i=0; i<M; i++){
+            //선분의 시작점, 끝점 입력받기
+            st = new StringTokenizer(br.readLine());
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
 
-            // 이분탐색 -> 가능한 위치 인덱스 가져오기
-            int start_idx=binarySearch(start,0);
-            int end_idx=binarySearch(end,1);
-
-            System.out.println(end_idx-start_idx);
+            bw.write(upperBound(end)-lowerBound(start) + "\n");
         }
+        bw.close();
     }
 
-    private static int binarySearch(int start, int check) {
-        int left=0;
-        int right= point.length-1;
+    static int lowerBound(int target){
+        //타겟보다 작거나 같은 원소 중에 가장 큰 값
+        int start = 0;
+        int end = N-1;
 
-        if(check==0){
-            while(left<=right){
-                int mid=(left+right)/2;
-                if (point[mid] < start) {
-                    left = mid+1;
-                } else {
-                    right = mid-1;
-                }
+        while(start<=end){
+            int mid = (start+end)/2;
+            if(points[mid]>=target){
+                //타겟을 찾았거나 타겟이 왼쪽에 있는 경우, 왼쪽 탐색
+                end = mid-1;
+            }else{
+                //타겟이 오른쪽에 있는 경우, 오른쪽 탐색
+                start = mid+1;
             }
-
-            return left;
         }
-        else{
-            while(left<=right){
-                int mid=(left+right)/2;
-                if(point[mid]>start){
-                    right=mid-1;
-                }
-                else{
-                    left=mid+1;
-                }
+        return start;
+    }
+
+    static int upperBound(int target){
+        int start = 0;
+        int end = N-1;
+
+        while(start<=end){
+            int mid = (start+end)/2;
+            if(points[mid]<=target){
+                //타겟을 찾았거나 타겟이 오른쪽에 있는 경우, 오른쪽을 탐색
+                start = mid+1;
+            }else{
+                //타겟이 왼쪽에 있는 경우
+                end = mid-1;
             }
-
-            return right+1;
         }
-
+        return start;
     }
 }
