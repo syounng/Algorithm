@@ -35,7 +35,7 @@ public class Main{
                 start = mid + 1;
             }
         }
-        System.out.println(end);
+        System.out.println(start-1);
 
     }
     static long availableLength(long h){
