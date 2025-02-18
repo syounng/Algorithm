@@ -2,94 +2,79 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static List<ArrayList<Integer>> graph;
+    static List<List<Integer>> list;
     static boolean[] visited;
-
+    static boolean cycle;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer stz;
+        StringTokenizer st;
 
-        int testCase = 1;
+        boolean isEnd = false;
+        int caseNum = 1;
 
-        while (true) {
-            stz = new StringTokenizer(br.readLine(), " ");
+        while(true){
+            st = new StringTokenizer(br.readLine());
+            int N = Integer.parseInt(st.nextToken());
+            int M = Integer.parseInt(st.nextToken());
+            if(N==0 && M==0) return;
 
-            int n = Integer.parseInt(stz.nextToken());
-            int m = Integer.parseInt(stz.nextToken());
-
-            // 0 0이면 종료
-            if (n == 0 && m == 0) break;
-
-            graph = new ArrayList<>();
-            for (int i = 0; i < n + 1; i++) {
-                graph.add(new ArrayList<>());
+            //인접 리스트 생성
+            list = new ArrayList<>();
+            for(int i=0; i<N+1; i++){
+                list.add(new ArrayList<>());
+            }
+            for(int i=0; i<M; i++){
+                st = new StringTokenizer(br.readLine());
+                int node1 = Integer.parseInt(st.nextToken());
+                int node2 = Integer.parseInt(st.nextToken());
+                list.get(node1).add(node2);
+                list.get(node2).add(node1);
             }
 
-            visited = new boolean[n + 1];
+            //방문체크 배열 생성
+            visited = new boolean[N+1];
 
-            // 입력값으로 그래프를 만듦
-            for (int i = 0; i < m; i++) {
-                stz = new StringTokenizer(br.readLine(), " ");
-                int a = Integer.parseInt(stz.nextToken());
-                int b = Integer.parseInt(stz.nextToken());
+            //트리의 개수 저장하는 변수
+            int treeCnt = 0;
 
-                graph.get(a).add(b);
-                graph.get(b).add(a);
-            }
-
-            // 아직 방문하지 않은 노드들을 확인해 트리인지 확인
-            // 루트 노드만 있어도 트리임
-            int tree = 0;
-            for (int i = 1; i < n + 1; i++) {
-                if (!visited[i]) {
-                    tree += checkTree(i);
+            //모든 노드에 대해서 DFS
+            for(int i=1; i<=N; i++){
+                //아직 방문하지 않은 노드면 dfs탐색
+                if(!visited[i]){
+                    cycle = false;
+                    dfs(i, -1);
+                    //dfs 결과 사이클이 아니었다면 트리 하나 세기
+                    if(!cycle) treeCnt++;
                 }
             }
-            bw.write("Case " + testCase + ": ");
 
-            if (tree > 1) {
-                bw.write("A forest of " + tree + " trees.");
-            } else if (tree == 1) {
-                bw.write("There is one tree.");
-            } else {
-                bw.write("No trees.");
+            StringBuilder sb = new StringBuilder();
+            sb.append("Case " + caseNum + ": ");
+            caseNum++;
+
+            if(treeCnt==0){
+                sb.append("No trees.");
+            }else if(treeCnt==1){
+                sb.append("There is one tree.");
+            }else if(treeCnt>1){
+                sb.append("A forest of " + treeCnt + " trees.");
             }
-            bw.write("\n");
-
-            testCase++;
+            System.out.println(sb);
         }
-
-        bw.flush();
-        bw.close();
-        br.close();
     }
 
-    // 트리일 경우 n = e+1
-    private static int checkTree(int root) {
-        Queue<Integer> qu = new LinkedList<>();
-        int node = 0;
-        int edge = 0;
+    static void dfs(int now, int parent) {
+        visited[now] = true;
 
-        qu.add(root);
-
-        while (!qu.isEmpty()) {
-            int cn = qu.poll();
-
-            if (visited[cn]) continue;
-            visited[cn] = true;
-            node++;
-
-            for (int i = 0; i < graph.get(cn).size(); i++) {
-                int nn = graph.get(cn).get(i);
-                edge++;
-                if (!visited[nn]) {
-                    qu.add(nn);
-                }
+        //now와 인접한 노드 방문
+        for (int next : list.get(now)) {
+            //아직 방문하지 않았다면 dfs탐색
+            if (!visited[next]) {
+                dfs(next, now);
+            } else if (next != parent) {
+                // 방문한 적이 있는데 부모 노드가 아니라면 사이클 발생
+                cycle = true;
             }
         }
-
-        // 무방향 그래프 이므로 (e/2)해야 함
-        return (edge / 2) + 1 == node ? 1 : 0;
     }
 }
