@@ -43,7 +43,7 @@ def dfs(x:int, y:int, height_:int):
 
 
 # 물 높이 1부터 max_height까지 검사
-for height in range(1, max_height+1):
+for height in range(0, max_height+1):
     # 안전지대 개수 초기화
     cnt = 0
 
@@ -56,8 +56,6 @@ for height in range(1, max_height+1):
                 dfs(i, j, height)
                 cnt+=1
     max_cnt = max(max_cnt, cnt)
-if max_cnt==0:
-    print(1)
-else: 
-    print(max_cnt)
+
+print(max_cnt)
 
