@@ -1,5 +1,4 @@
 import sys
-from itertools import combinations
 
 n = int(sys.stdin.readline())
 circles = []
@@ -12,7 +11,7 @@ for c in circles:
     sides.append([c[0] - c[1], c[0] + c[1]]) # (중심 좌표 - 반지름, 중심 좌표 + 반지름)
 
 # 시작 좌표 기준으로 정렬, 시작 좌표가 같으면 끝 좌표 기준으로 정렬
-sides.sort(key=lambda x: (x[0], x[1]))
+# sides.sort(key=lambda x: (x[0], x[1]))
 
 # 시작 좌표를 가장 작은 숫자부터, 숫자가 같으면 끝 좌표 먼저 정렬
 # 시작 좌표, 끝 좌표를 함께 정렬
