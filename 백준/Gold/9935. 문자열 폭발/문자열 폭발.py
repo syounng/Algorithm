@@ -1,32 +1,18 @@
 import sys
 
-string = sys.stdin.readline()
-target = sys.stdin.readline()
-s = list(string[i:i+1] for i in range(0, len(string)-1))
-t = list(target[i:i+1] for i in range(0, len(target)-1))
-
+string = sys.stdin.readline().strip()
+t = sys.stdin.readline().strip()
 stk = []
-i=0
-found = 0 # 폭탄을 찾은 개수
 
-for i in range(len(s)):
-    stk.append(s[i])
-    if stk[-1]==t[len(t)-1]: # target의 끝 글자와 같으면 스택에서 target만큼 꺼내서 target과 같은지 확인
-        flag = False
-        if len(stk)>=len(t):
-            stk_value = stk[i-len(t)+1-(found*len(t)):i+1-(found*len(t))]
-            if stk_value == t:
-                flag = True
-        if flag :
-            found += 1
-            for _ in range(len(t)):
+for s in string:
+    stk.append(s)
+    if s == t[-1]: # 스택에 넣은 값이 타겟의 마지막 값과 같으면
+        if stk[-len(t):] == list(t): # 스택에서 target 개수만큼 꺼내서 target과 같은지 확인하기
+            for _ in range(len(t)): # 같으면 target 개수만큼 pop
                 stk.pop()
 
-if len(stk)==0:
+if not stk:
     print('FRULA')
 else:
     for i in stk:
         print(i,end="")
-
-
-
