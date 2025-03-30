@@ -1,33 +1,28 @@
 import sys
 sys.setrecursionlimit(10**9)
 input = sys.stdin.readline
-tree = []
+l = []
+ans = []
 while True:
     try:
         x = int(input())
-        tree.append(x)
+        l.append(x)
     except:
         break
+def search(s, e):
+    if s>=e: # 노드가 하나 밖에 없는 트리
+        ans.append(l[s]) # ans에 추가
+        return
+    if l[s]>l[e] or l[s]<l[s+1]: # 현재 루트 노드의 오른쪽 자식이 없음 즉 왼쪽 서브 트리만 존재
+        search(s+1, e)
+        ans.append(l[s])
+        return
+    for i in range(s+1, e+1): # 왼쪽 서브 트리, 오른쪽 서브 트리 모두 존재하는 경우
+        if l[s] < l[i]:
+            break
+    search(s+1, i-1)
+    search(i, e)
+    ans.append(l[s])
 
-def search(arr):
-    if len(arr)==0:
-        return
-    if len(arr)==1:
-        print(arr[0])
-        return
-    left, right = 0, 0
-    for i in range(1, len(arr)):
-        if arr[i] < arr[0]:
-            left = i
-            break
-    for i in range(1, len(arr)):
-        if arr[i] > arr[0]:
-            right = i
-            break
-    if left>0 and right>0:
-        search(arr[left:right])
-        search(arr[right:len(arr)])
-    else:
-        search(arr[1:len(arr)])
-    print(arr[0])
-search(tree)
+search(0, len(l) - 1)
+print('\n'.join(map(str, ans)))
