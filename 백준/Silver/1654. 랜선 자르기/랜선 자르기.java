@@ -20,6 +20,7 @@ public class Main {
         long start = 1; //최소 랜선 길이
         long end = max; //최대 랜선 길이
         long mid = (start+end)/2;
+        long ans = 0;
 
         while(start <= end){
             mid = (start + end)/2;
@@ -32,10 +33,11 @@ public class Main {
             if(count < n){ //n개보다 적은 수로 잘리면 자르는 길이를 줄이기
                 end = mid-1;
             }else { //n개보다 큰 수로 잘리면 자르는 길이를 늘리기 (자르는 길이의 최댓값을 구해야 하므로 가능할 때까지 계속 늘려나가기)
+                ans = mid;
                 start = mid+1;
             }
         }
-        System.out.println(end);
+        System.out.println(ans);
 
     }
 
