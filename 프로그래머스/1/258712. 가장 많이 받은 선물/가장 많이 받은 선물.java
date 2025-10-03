@@ -24,11 +24,8 @@ class Solution {
             st = new StringTokenizer(gifts[i]);
             String f1 = st.nextToken();
             String f2 = st.nextToken();
-            
-            int giver = nameIdx.get(f1);
-            int receiver = nameIdx.get(f2);
-            
-            giftInfo[giver][receiver]++;
+                 
+            giftInfo[nameIdx.get(f1)][nameIdx.get(f2)]++;
         }
         
         //선물 지수 구하기
@@ -37,21 +34,18 @@ class Solution {
         }
         
         //giftInfo의 요소를 하나씩 탐색
-        boolean[][] visited = new boolean[friends.length][friends.length];
         int[] result = new int[friends.length];
         
         for(int i=0; i<giftInfo.length; i++){
-            for(int j=0; j<giftInfo.length; j++){
+            for(int j=i+1; j<giftInfo.length; j++){
                 
-                if(i==j || visited[i][j]) continue;
+                if(i==j) continue;
                 
                 //0이 아니고(주고 받은 기록이 있고) 주고받은 수가 다르다면
                 //[a][b], [b][a] 중 더 큰 값의 행에 해당하는 사람이 선물 한 개 획득
                 if((giftInfo[i][j] != 0 || giftInfo[j][i] != 0)
                                         && giftInfo[i][j] != giftInfo[j][i]){
-                    
-                    visited[i][j] = visited[j][i] = true;
-                    
+                                        
                     int val = giftInfo[i][j] > giftInfo[j][i] ? i : j;
                     result[val]++;
                     continue;
@@ -62,14 +56,11 @@ class Solution {
                 //선물 지수가 더 큰 사람이 선물 한 개 획득
                 if((giftInfo[i][j] == 0 && giftInfo[j][i] == 0)
                     || giftInfo[i][j] == giftInfo[j][i]){
-                    
-                    visited[i][j] = visited[j][i] = true;
-                    
+                                        
                     //선물 지수가 다르다면, 선물지수 더 큰 사람이 선물 하나 획득
                     if(giftFactor[i] != giftFactor[j]){
                         int val = giftFactor[i] > giftFactor[j] ? i : j;
                         result[val]++;
-                        System.out.println("i:"+i+" j:"+j+" val:"+val);
                     }
                     
                 }
