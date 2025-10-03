@@ -1,17 +1,18 @@
 import java.util.*;
 
 class Solution {
-    //주고받은 선물 정보를 저장할 이차원 배열 생성
+    
     static int[][] giftInfo;
     public int solution(String[] friends, String[] gifts) {
         
         StringTokenizer st;
+        //주고받은 선물 정보 저장
         giftInfo = new int[friends.length][friends.length];
+        //선물 지수 저장
         int[] giftFactor = new int[friends.length];
-        
+
         //맵을 사용해 friends 이름을 idx로 표현 
         Map<String, Integer> nameIdx = new HashMap<>();
-        
         for(int i=0; i<friends.length; i++){
             nameIdx.put(friends[i], i);
         }
@@ -24,8 +25,8 @@ class Solution {
             String f1 = st.nextToken();
             String f2 = st.nextToken();
             
-            int giver = nameIdx.get(f1).intValue();
-            int receiver = nameIdx.get(f2).intValue();
+            int giver = nameIdx.get(f1);
+            int receiver = nameIdx.get(f2);
             
             giftInfo[giver][receiver]++;
         }
@@ -75,15 +76,6 @@ class Solution {
             }
         }
         int ans = Arrays.stream(result).max().getAsInt();
-        System.out.println(ans);
-        for(int[] tmp : giftInfo){
-            for(int tmp2 : tmp){
-                System.out.print(tmp2);
-            }
-            System.out.println();
-        }
-        for(int tmp : result)
-            System.out.print(tmp + " ");
         return ans;
     }
     
